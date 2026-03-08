@@ -48,11 +48,21 @@ function App() {
       childClass: data.childClass,
       items,
     };
+    console.log(payload);
 
-    await fetch("https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    const response = await fetch(
+      "https://script.google.com/macros/s/AKfycbyBGy7iEoH7_oRBuD6x0doOm04cxuzMntNygmueckukqP9ExrV6FPK0zVh4NlVH-HxD/exec",
+      {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "text/plain",
+        },
+        body: JSON.stringify(payload),
+      },
+    );
+
+    console.log(response);
 
     alert("Order submitted!");
   };
