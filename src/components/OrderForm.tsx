@@ -2,8 +2,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
 
-const sizes = ["XS", "S", "M", "L", "XL", "XXL"] as const;
-
 interface UniformItem {
   uniformType: string;
   price: number;
@@ -19,10 +17,11 @@ type OrderData = z.infer<typeof schema>;
 
 interface Props {
   uniforms: UniformItem[];
+  sizes: string[];
   onSubmit: (data: OrderData) => void;
 }
 
-export default function OrderForm({ uniforms, onSubmit }: Props) {
+export default function OrderForm({ uniforms, sizes, onSubmit }: Props) {
   const {
     register,
     handleSubmit,
