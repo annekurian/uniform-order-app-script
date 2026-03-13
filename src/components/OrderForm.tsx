@@ -7,13 +7,18 @@ interface UniformItem {
   price: number;
 }
 
+const KeySchema = z.string();
+
 const schema = z.object({
   childName: z.string().min(1, "Name is required"),
   childClass: z.string().min(1, "Class is required"),
-  sizeOrders: z.record(z.record(z.coerce.number().min(0))),
+  sizeOrders: z.record(
+    KeySchema,
+    z.record(KeySchema, z.coerce.number().min(0)),
+  ),
 });
 
-type OrderData = z.infer<typeof schema>;
+export type OrderData = z.infer<typeof schema>;
 
 interface Props {
   uniforms: UniformItem[];
@@ -25,6 +30,7 @@ export default function OrderForm({ uniforms, sizes, onSubmit }: Props) {
   const {
     register,
     handleSubmit,
+    reset,
     watch,
     formState: { errors },
   } = useForm<OrderData>({
@@ -35,7 +41,7 @@ export default function OrderForm({ uniforms, sizes, onSubmit }: Props) {
   const values = watch("sizeOrders");
 
   const total = uniforms.reduce((sum, item) => {
-    const sizesData = values?.[item.uniformType] || {};
+    const sizesData = values?.[item.uniformType.replace(/['/ ]/g, "_")] || {};
 
     return (
       sum +
@@ -46,11 +52,18 @@ export default function OrderForm({ uniforms, sizes, onSubmit }: Props) {
     );
   }, 0);
 
+  const submit = handleSubmit((data) => {
+    console.log("Data", data, uniforms, sizes);
+    reset({
+      childName: "",
+      childClass: "",
+      sizeOrders: { "Polo T-Shirt": { L: 0 } },
+    });
+    onSubmit(data);
+  });
+
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="max-w-3xl mx-auto flex flex-col gap-6"
-    >
+    <form onSubmit={submit} className="max-w-3xl mx-auto flex flex-col gap-6">
       <h1 className="text-xl font-bold">Uniform Order Form</h1>
 
       <div>
@@ -93,7 +106,9 @@ export default function OrderForm({ uniforms, sizes, onSubmit }: Props) {
                 min="0"
                 placeholder={size}
                 className="border p-2 rounded"
-                {...register(`sizeOrders.${item.uniformType}.${size}`)}
+                {...register(
+                  `sizeOrders.${item.uniformType.replace(/['/ ]/g, "_")}.${size}"]`,
+                )}
               />
             ))}
           </div>

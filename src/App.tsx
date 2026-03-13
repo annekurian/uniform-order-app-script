@@ -1,16 +1,10 @@
 import "./App.css";
-import OrderForm from "./components/OrderForm";
+import OrderForm, { type OrderData } from "./components/OrderForm";
 
 type OrderItem = {
   name: string;
   size: string;
   quantity: number;
-};
-
-type OrderData = {
-  childName: string;
-  childClass: string;
-  sizeOrders: Record<string, Record<string, number>>;
 };
 
 const sizes: string[] = ["XS", "S", "M", "L", "XL", "XXL"] as const;
@@ -48,9 +42,8 @@ function App() {
       childClass: data.childClass,
       items,
     };
-    console.log(payload);
 
-    const response = await fetch(
+    await fetch(
       "https://script.google.com/macros/s/AKfycbyBGy7iEoH7_oRBuD6x0doOm04cxuzMntNygmueckukqP9ExrV6FPK0zVh4NlVH-HxD/exec",
       {
         method: "POST",
@@ -61,8 +54,6 @@ function App() {
         body: JSON.stringify(payload),
       },
     );
-
-    console.log(response);
 
     alert("Order submitted!");
   };
