@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
+import classLevels from "../classLevels";
 
 interface UniformItem {
   uniformType: string;
@@ -24,9 +25,15 @@ interface Props {
   uniforms: UniformItem[];
   sizes: string[];
   onSubmit: (data: OrderData) => void;
+  onSelect: (classLevel: string) => void;
 }
 
-export default function OrderForm({ uniforms, sizes, onSubmit }: Props) {
+export default function OrderForm({
+  uniforms,
+  sizes,
+  onSubmit,
+  onSelect,
+}: Props) {
   const {
     register,
     handleSubmit,
@@ -53,7 +60,6 @@ export default function OrderForm({ uniforms, sizes, onSubmit }: Props) {
   }, 0);
 
   const submit = handleSubmit((data) => {
-    console.log("Data", data, uniforms, sizes);
     reset({
       childName: "",
       childClass: "",
@@ -63,29 +69,38 @@ export default function OrderForm({ uniforms, sizes, onSubmit }: Props) {
   });
 
   return (
-    <form onSubmit={submit} className="max-w-3xl mx-auto flex flex-col gap-6">
-      <h1 className="text-xl font-bold">Uniform Order Form</h1>
+    <form
+      onSubmit={submit}
+      className="max-w-3xl mx-auto flex flex-col items-start gap-6"
+    >
+      <h1 className="text-xl text-gray-700 font-bold self-center">
+        Uniform Order Form
+      </h1>
 
-      <div>
+      <div className="flex flex-col items-start">
         <label className="block text-sm font-medium">Child Name</label>
-
-        <input
-          {...register("childName")}
-          className="border rounded p-2 w-full"
-        />
+        <input {...register("childName")} className="border rounded p-2 w-md" />
 
         {errors.childName && (
           <p className="text-red-500 text-sm">{errors.childName.message}</p>
         )}
       </div>
 
-      <div>
+      <div className="flex flex-col items-start">
         <label className="block text-sm font-medium">Class</label>
-
-        <input
+        <select
           {...register("childClass")}
-          className="border rounded p-2 w-full"
-        />
+          onChange={(e) => onSelect(e.target.value)}
+          id="childClass"
+          className="border rounded p-2 w-min"
+        >
+          <option value=""> -- Select Class --</option>
+          {classLevels.map((level) => (
+            <option key={level} value={level}>
+              {level}
+            </option>
+          ))}
+        </select>
 
         {errors.childClass && (
           <p className="text-red-500 text-sm">{errors.childClass.message}</p>

@@ -1,4 +1,6 @@
-import "./App.css";
+import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import OrderForm, { type OrderData } from "./components/OrderForm";
 
 type OrderItem = {
@@ -21,6 +23,8 @@ function App() {
     { uniformType: "Polo T‑Shirt", price: 20.5 },
     { uniformType: "Yellow T‑Shirt", price: 20.5 },
   ];
+
+  const [childClass, setChildClass] = useState("");
 
   const handleSubmitOrder = async (data: OrderData) => {
     const items: OrderItem[] = [];
@@ -54,20 +58,21 @@ function App() {
         body: JSON.stringify(payload),
       },
     );
-
-    alert("Order submitted!");
+    toast.success("Order placed successfully");
   };
 
   return (
-    <div>
-      <h1 className="font-bold text-3xl text-gray-700 mb-4">
+    <div className="flex flex-col m-4 p-4">
+      <h1 className="font-bold text-3xl text-gray-700 mb-4 self-center">
         EIS International Pre-school
       </h1>
       <OrderForm
         uniforms={uniforms}
         sizes={sizes}
         onSubmit={handleSubmitOrder}
+        onSelect={(childClass) => setChildClass(childClass)}
       />
+      <ToastContainer position="top-center" theme="colored" closeOnClick />
     </div>
   );
 }
