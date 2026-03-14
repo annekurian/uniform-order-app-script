@@ -116,6 +116,7 @@ export default function OrderForm({
           <div className="grid grid-cols-3 gap-2 mt-2">
             {sizes.map((size) => (
               <input
+                onWheel={(event) => event?.currentTarget?.blur()}
                 key={size}
                 type="number"
                 min="0"
