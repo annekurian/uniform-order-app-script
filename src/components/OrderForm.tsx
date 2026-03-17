@@ -2,11 +2,13 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod/dist/zod.js";
 import classLevels from "../classLevels";
+import { useEffect } from "react";
+import { getUniformType } from "../App";
 
-interface UniformItem {
+export type UniformItem = {
   uniformType: string;
   price: number;
-}
+};
 
 const KeySchema = z.string();
 
@@ -21,34 +23,50 @@ const schema = z.object({
 
 export type OrderData = z.infer<typeof schema>;
 
-interface Props {
+type SizeOrders = Record<string, Record<string, number>>;
+
+type Props = {
   uniforms: UniformItem[];
   sizes: string[];
   onSubmit: (data: OrderData) => void;
   onSelect: (classLevel: string) => void;
-}
+  generateDefaultSizes: () => SizeOrders;
+};
 
 export default function OrderForm({
   uniforms,
   sizes,
   onSubmit,
   onSelect,
+  generateDefaultSizes,
 }: Props) {
   const {
     register,
     handleSubmit,
     reset,
     watch,
-    formState: { errors },
+    setValue,
+    formState: { isSubmitSuccessful, errors },
   } = useForm<OrderData>({
     resolver: zodResolver(schema),
-    defaultValues: { sizeOrders: {} },
+    defaultValues: { sizeOrders: generateDefaultSizes() },
   });
 
+  useEffect(() => {
+    reset({
+      childName: "",
+      childClass: "",
+    });
+    setValue("sizeOrders", generateDefaultSizes(), {
+      shouldDirty: false,
+      shouldTouch: false,
+      shouldValidate: false,
+    });
+  }, [isSubmitSuccessful]);
   const values = watch("sizeOrders");
 
   const total = uniforms.reduce((sum, item) => {
-    const sizesData = values?.[item.uniformType.replace(/['/ ]/g, "_")] || {};
+    const sizesData = values?.[getUniformType(item.uniformType)] || {};
 
     return (
       sum +
@@ -60,18 +78,13 @@ export default function OrderForm({
   }, 0);
 
   const submit = handleSubmit((data) => {
-    reset({
-      childName: "",
-      childClass: "",
-      sizeOrders: { "Polo T-Shirt": { L: 0 } },
-    });
     onSubmit(data);
   });
 
   return (
     <form
       onSubmit={submit}
-      className="max-w-3xl mx-auto flex flex-col items-start gap-6"
+      className="max-w-3xl mx-auto p-8 flex flex-col items-start gap-6 bg-orange-100"
     >
       <h1 className="text-xl text-gray-700 font-bold self-center">
         Uniform Order Form
@@ -123,7 +136,7 @@ export default function OrderForm({
                 placeholder={size}
                 className="border p-2 rounded"
                 {...register(
-                  `sizeOrders.${item.uniformType.replace(/['/ ]/g, "_")}.${size}"]`,
+                  `sizeOrders.${getUniformType(item.uniformType)}.${size}"]`,
                 )}
               />
             ))}

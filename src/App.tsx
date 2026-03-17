@@ -1,18 +1,25 @@
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import OrderForm, { type OrderData } from "./components/OrderForm";
+import OrderForm, {
+  type OrderData,
+  type UniformItem,
+} from "./components/OrderForm";
 
 type OrderItem = {
   name: string;
   size: string;
   quantity: number;
+  price: number;
 };
 
 const sizes: string[] = ["XS", "S", "M", "L", "XL", "XXL"] as const;
 
+export const getUniformType = (uniform: string) =>
+  uniform.replace(/['/ ]/g, "_");
+
 function App() {
-  const uniforms = [
+  const uniforms: UniformItem[] = [
     { uniformType: "Boy's Shirt", price: 31.5 },
     { uniformType: "Boy's/Girl's Shorts", price: 25.5 },
     { uniformType: "Girl's Dress", price: 47 },
@@ -24,7 +31,22 @@ function App() {
     { uniformType: "Yellow T‑Shirt", price: 20.5 },
   ];
 
+  const uniformPriceMap = new Map(
+    uniforms.map((u) => [getUniformType(u.uniformType), u.price]),
+  );
+
   const [childClass, setChildClass] = useState("");
+
+  const generateDefaultSizes = (): Record<string, Record<string, number>> => {
+    return Object.fromEntries(
+      uniforms.map((u) => [
+        u.uniformType,
+        Object.fromEntries(sizes.map((size) => [size, 0])),
+      ]),
+    );
+  };
+
+  console.log("Default", generateDefaultSizes());
 
   const handleSubmitOrder = async (data: OrderData) => {
     const items: OrderItem[] = [];
@@ -36,6 +58,7 @@ function App() {
             name: uniform,
             size,
             quantity: qty,
+            price: (uniformPriceMap.get(uniform) ?? 0) * qty,
           });
         }
       });
@@ -71,6 +94,7 @@ function App() {
         sizes={sizes}
         onSubmit={handleSubmitOrder}
         onSelect={(childClass) => setChildClass(childClass)}
+        generateDefaultSizes={generateDefaultSizes}
       />
       <ToastContainer position="top-center" theme="colored" closeOnClick />
     </div>
