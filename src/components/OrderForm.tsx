@@ -17,13 +17,13 @@ const schema = z.object({
   childClass: z.string().min(1, "Class is required"),
   sizeOrders: z.record(
     KeySchema,
-    z.record(KeySchema, z.coerce.number().min(0)),
+    z.record(KeySchema, z.coerce.number().min(0) || z.string()),
   ),
 });
 
 export type OrderData = z.infer<typeof schema>;
 
-type SizeOrders = Record<string, Record<string, number>>;
+type SizeOrders = Record<string, Record<string, number | string>>;
 
 type Props = {
   uniforms: UniformItem[];
@@ -91,8 +91,11 @@ export default function OrderForm({
       </h1>
 
       <div className="flex flex-col items-start">
-        <label className="block text-sm font-medium">Child Name</label>
-        <input {...register("childName")} className="border rounded p-2 w-md" />
+        <label className="block text-sm font-medium ">Child Name</label>
+        <input
+          {...register("childName")}
+          className="border rounded p-2 w-md focus:outline-amber-600"
+        />
 
         {errors.childName && (
           <p className="text-red-500 text-sm">{errors.childName.message}</p>
@@ -105,7 +108,7 @@ export default function OrderForm({
           {...register("childClass")}
           onChange={(e) => onSelect(e.target.value)}
           id="childClass"
-          className="border rounded p-2 w-min"
+          className="border rounded p-2 w-min focus:outline-amber-600"
         >
           <option value=""> -- Select Class --</option>
           {classLevels.map((level) => (
@@ -121,7 +124,7 @@ export default function OrderForm({
       </div>
 
       {uniforms.map((item) => (
-        <div key={item.uniformType}>
+        <div key={getUniformType(item.uniformType)}>
           <h2 className="font-semibold">
             {item.uniformType} (${item.price})
           </h2>
@@ -134,7 +137,7 @@ export default function OrderForm({
                 type="number"
                 min="0"
                 placeholder={size}
-                className="border p-2 rounded"
+                className="border p-2 rounded focus:outline-amber-600"
                 {...register(
                   `sizeOrders.${getUniformType(item.uniformType)}.${size}"]`,
                 )}
@@ -148,7 +151,8 @@ export default function OrderForm({
 
       <button
         type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded"
+        disabled={isSubmitSuccessful}
+        className="bg-blue-600 text-white px-4 py-2 rounded "
       >
         Submit Order
       </button>

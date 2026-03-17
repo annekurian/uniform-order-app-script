@@ -38,16 +38,17 @@ function App() {
 
   const [childClass, setChildClass] = useState("");
 
-  const generateDefaultSizes = (): Record<string, Record<string, number>> => {
+  const generateDefaultSizes = (): Record<
+    string,
+    Record<string, number | string>
+  > => {
     return Object.fromEntries(
       uniforms.map((u) => [
-        u.uniformType,
-        Object.fromEntries(sizes.map((size) => [size, 0])),
+        getUniformType(u.uniformType),
+        Object.fromEntries(sizes.map((size) => [size, ""])),
       ]),
     );
   };
-
-  console.log("Default", generateDefaultSizes());
 
   const handleSubmitOrder = async (data: OrderData, total: number) => {
     const items: OrderItem[] = [];
