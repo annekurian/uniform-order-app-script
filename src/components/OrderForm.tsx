@@ -28,7 +28,7 @@ type SizeOrders = Record<string, Record<string, number>>;
 type Props = {
   uniforms: UniformItem[];
   sizes: string[];
-  onSubmit: (data: OrderData) => void;
+  onSubmit: (data: OrderData, total: number) => void;
   onSelect: (classLevel: string) => void;
   generateDefaultSizes: () => SizeOrders;
 };
@@ -78,7 +78,7 @@ export default function OrderForm({
   }, 0);
 
   const submit = handleSubmit((data) => {
-    onSubmit(data);
+    onSubmit(data, total);
   });
 
   return (

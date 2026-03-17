@@ -11,6 +11,7 @@ type OrderItem = {
   size: string;
   quantity: number;
   price: number;
+  total: number;
 };
 
 const sizes: string[] = ["XS", "S", "M", "L", "XL", "XXL"] as const;
@@ -48,7 +49,7 @@ function App() {
 
   console.log("Default", generateDefaultSizes());
 
-  const handleSubmitOrder = async (data: OrderData) => {
+  const handleSubmitOrder = async (data: OrderData, total: number) => {
     const items: OrderItem[] = [];
 
     Object.entries(data.sizeOrders).forEach(([uniform, sizes]) => {
@@ -59,6 +60,7 @@ function App() {
             size,
             quantity: qty,
             price: (uniformPriceMap.get(uniform) ?? 0) * qty,
+            total,
           });
         }
       });
