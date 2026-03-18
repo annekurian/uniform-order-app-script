@@ -7,7 +7,7 @@ This project demonstrates how to build a serverless data collection system using
 
 ## Demo
 
-Live App: https://uniform-orders.vercel.app
+Live App: [https://uniform-order-system.vercel.app](https://uniform-order-system.vercel.app/)
 
 ## Features
 
