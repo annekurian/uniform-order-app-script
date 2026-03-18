@@ -29,7 +29,7 @@ Frontend:
 - Vite
 - Tailwind CSS
 - React Hook Form
-- Zod(fomr validation)
+- Zod(form validation)
 
 Backend:
 
@@ -51,9 +51,12 @@ The React app sends order data to a Google Apps Script Web App endpoint which wr
 
 ## Running Locally
 
-1. Clone the repository
+1. Clone the repository:
+
+   ```
    git clone https://github.com/annekurian/uniform-order-app-script.git
    cd uniform-order-app-script
+   ```
 
 2. Install dependencies
    `bun init`
@@ -87,7 +90,7 @@ You will receive a Web App URL like https://script.google.com/macros/s/YOUR_SCRI
 ## Configure React API Endpoint
 
 Update the API URL in your React application. Paste the URL in the file src/webUrl.ts
-const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"
+`const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"`
 
 ## Request Payload
 
