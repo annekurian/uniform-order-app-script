@@ -90,6 +90,7 @@ You will receive a Web App URL like https://script.google.com/macros/s/YOUR_SCRI
 ## Configure React API Endpoint
 
 Update the API URL in your React application. Paste the URL in the file src/webUrl.ts
+
 `const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"`
 
 ## Request Payload
