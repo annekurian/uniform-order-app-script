@@ -1,73 +1,87 @@
-# React + TypeScript + Vite
+# School Uniform Order System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple web application built with React that allows parents to submit
+school uniform orders. Orders are stored directly in Google Sheets
+using a Google Apps Script Web App.
 
-Currently, two official plugins are available:
+## Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Live App: https://uniform-orders.vercel.app
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Submit uniform orders from parents
+- Supports multiple uniform types and sizes
+- Stores orders in Google Sheets
+- No backend server required
+- Lightweight React + Tailwind UI
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Frontend:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Backend:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Google Apps Script Web App
+
+Database:
+
+- Google Sheets
+
+## Architecture
+
+Browser (Parents) -> React App -> Google Apps Script Web App -> Google Sheets (stores orders)
+
+## Running Locally
+
+1. Clone the repository
+   git clone https://github.com/annekurian/uniform-order-app-script.git
+
+2. Install dependencies
+   `bun init`
+
+3. Start development server
+   `bun run dev`
+
+## Google Sheets Setup
+
+4. Create a new Google Sheet
+5. Add a sheet named `Orders`
+6. Add the following headers
+
+Date | Child Name | Class | Uniform | Size | Quantity | Price | Total
+
+## Google Apps Script Setup
+
+1. Open Google Sheet
+2. Click Extensions → Apps Script
+3. Add the following script: https://github.com/annekurian/uniform-order-app-script/blob/main/src/backend/Code.gs
+4. Click Deploy → Web App
+   Execute as: Me
+   Access: Anyone
+
+## Configuration
+
+Update the API URL in src/webUrl.ts
+const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"
+
+## Request Payload
+
 ```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+{
+  "childName": "John",
+  "childClass": "Grade 3",
+  "items": [
+    {
+      "name": "Boy Shirt",
+      "size": "M",
+      "quantity": 2
+    }
+  ]
+}
 ```

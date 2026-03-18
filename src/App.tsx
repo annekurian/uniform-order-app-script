@@ -5,6 +5,7 @@ import OrderForm, {
   type OrderData,
   type UniformItem,
 } from "./components/OrderForm";
+import { API_URL } from "./webUrl";
 
 type OrderItem = {
   name: string;
@@ -73,17 +74,14 @@ function App() {
       items,
     };
 
-    await fetch(
-      "https://script.google.com/macros/s/AKfycbyBGy7iEoH7_oRBuD6x0doOm04cxuzMntNygmueckukqP9ExrV6FPK0zVh4NlVH-HxD/exec",
-      {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "text/plain",
-        },
-        body: JSON.stringify(payload),
+    await fetch(API_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "text/plain",
       },
-    );
+      body: JSON.stringify(payload),
+    });
     toast.success("Order placed successfully");
   };
 
