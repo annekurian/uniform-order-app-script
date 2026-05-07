@@ -3,7 +3,7 @@ function sendEmailNotification(data) {
   const uniforms = items.map(
     (item) => ` ${item.name}(${item.size}) - ${item.quantity}`,
   );
-  const emailRecipient = "anne.kurian14@gmail.com"; // Replace with the recipient's email
+  const emailRecipient = "myemail@gmail.com"; // Replace with the recipient's email
   const emailSubject = "Uniform Order Submitted for " + childName;
   let emailBody = " Order details \n";
   emailBody += "------------------------\n";
