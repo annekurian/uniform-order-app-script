@@ -88,7 +88,7 @@ function App() {
   return (
     <div className="flex flex-col m-4 p-4">
       <h1 className="font-bold text-3xl text-gray-700 mb-4 self-center">
-        EIS International Pre-school
+        XXX International Pre-school
       </h1>
       <OrderForm
         uniforms={uniforms}
